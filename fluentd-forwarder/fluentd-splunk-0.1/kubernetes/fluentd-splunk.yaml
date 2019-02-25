@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluentd-splunk
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: fluentd-splunk
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: fluentd-splunk
+    namespace: kube-system
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: fluentd-splunk
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-splunk
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: fluentd-splunk
+    spec:
+      serviceAccount: fluentd-splunk
+      containers:
+      - name: fluentd-splunk
+        image: apprenda/fluentd-splunk:v0.1
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 100m
+            memory: 200Mi
+        env:
+        - name: HEC_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: splunk-config
+              key: hec-token
+        - name: HEC_ADDRESS  
+          valueFrom: 
+            secretKeyRef:
+              name: splunk-config
+              key: hec-address
+        - name: HEC_PROTOCOL
+          valueFrom:
+            secretKeyRef:
+              name: splunk-config
+              key: hec-protocol
+        - name: HEC_VERIFY_TLS
+          valueFrom:
+            secretKeyRef:
+              name: splunk-config
+              key: hec-verify-tls
+        - name: HEC_INDEX
+          valueFrom:
+            secretKeyRef:
+              name: splunk-config
+              key: hec-index
+        - name: KUBERNETES_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+        # conf file from config map
+        - name: fluentd-config
+          mountPath: /etc/fluentd-template
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+      - name: fluentd-config
+        configMap:
+          name: fluentd-config

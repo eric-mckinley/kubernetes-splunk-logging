@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: splunk-server
+  namespace: poc
+  labels:
+    app: splunk-server
+spec:
+  ports:
+  - name: webport
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  - name: collectorport
+    port: 8088
+    targetPort: 8088
+    protocol: TCP
+  type: LoadBalancer
+  selector:
+    app: splunk-server

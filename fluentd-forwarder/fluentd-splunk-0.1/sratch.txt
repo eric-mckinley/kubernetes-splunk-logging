@@ -1,0 +1,6 @@
+kubectl --namespace kube-system create secret generic splunk-config \
+ --from-literal=hec-token=2e3ba1d0-e15e-4f3c-9809-4b45118583a4 \
+ --from-literal=hec-address=splunk-server.poc.svc.cluster.local:8088 \
+ --from-literal=hec-protocol=http \
+ --from-literal=hec-verify-tls=false \
+ --from-literal=hec-index=main

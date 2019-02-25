@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: microapp-deployment
+  namespace: poc
+spec:
+  selector:
+    matchLabels:
+      app: microapp
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: microapp
+    spec:
+      containers:
+        - name: microapp
+          imagePullPolicy: IfNotPresent
+          image: "ericmckinley/microapp-service:1.4"
+          ports:
+            - name: http
+              containerPort: 8080

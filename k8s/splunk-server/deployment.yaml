@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: splunk-server-deployment
+  namespace: poc
+spec:
+  selector:
+    matchLabels:
+      app: splunk-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: splunk-server
+    spec:
+      containers:
+        - name: splunk-server
+          imagePullPolicy: IfNotPresent
+          image: "splunk/splunk:latest"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+            - name: httpcollector
+              containerPort: 8088
+              protocol: TCP
+          env:
+          - name: SPLUNK_START_ARGS
+            value: "--accept-license"
+          - name: SPLUNK_PASSWORD
+            value: "Password1"
