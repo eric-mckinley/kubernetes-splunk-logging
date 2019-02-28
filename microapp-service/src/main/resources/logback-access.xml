@@ -14,6 +14,5 @@
         </layout>
     </appender>
 
-
     <appender-ref ref="STDOUT" />
 </configuration>

@@ -3,25 +3,12 @@ package com.mckinleyit.microapp.log;
 import ch.qos.logback.access.spi.IAccessEvent;
 import ch.qos.logback.classic.pattern.ThrowableHandlingConverter;
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.contrib.json.JsonLayoutBase;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AccessJsonLayout extends JsonLayoutBase<IAccessEvent> {
-    public static final String TIMESTAMP_ATTR_NAME = "timestamp";
-    public static final String LEVEL_ATTR_NAME = "level";
-    public static final String THREAD_ATTR_NAME = "thread";
-    public static final String MDC_ATTR_NAME = "mdc";
-    public static final String LOGGER_ATTR_NAME = "logger";
-    public static final String FORMATTED_MESSAGE_ATTR_NAME = "message";
-    public static final String MESSAGE_ATTR_NAME = "raw-message";
-    public static final String EXCEPTION_ATTR_NAME = "exception";
-    public static final String CONTEXT_ATTR_NAME = "context";
     protected boolean includeLevel = true;
     protected boolean includeThreadName = true;
     protected boolean includeMDC = true;
@@ -64,27 +51,6 @@ public class AccessJsonLayout extends JsonLayoutBase<IAccessEvent> {
         var2.put("headers", var1.getRequestHeaderMap());
         var2.put("status", var1.getStatusCode());
         return var2;
-    }
-
-    protected void addThrowableInfo(String var1, boolean var2, ILoggingEvent var3, Map<String, Object> var4) {
-        if (var2 && var3 != null) {
-            IThrowableProxy var5 = var3.getThrowableProxy();
-            if (var5 != null) {
-                String var6 = this.throwableProxyConverter.convert(var3);
-                if (var6 != null && !var6.equals("")) {
-                    var4.put(var1, var6);
-                }
-            }
-        }
-
-    }
-
-    private String getHeaderMap(Map<String, String> headers) {
-        try {
-            return new ObjectMapper().writeValueAsString(headers);
-        } catch (JsonProcessingException e) {
-            return "{}";
-        }
     }
 
     public String getLogType() {
