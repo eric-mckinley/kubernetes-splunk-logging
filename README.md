@@ -1,10 +1,16 @@
 # K8S LOGGING
 
-Output microservice app and request logs in json format to containers std.out and std.err
+Brief: To use k8s logs of stdout and stderr that kubernetes stores in each nodes /var/log/* folder by forwarding them to splunk via a fluentd forwarder running on each node.
 
-Fluentd Collector running as daemonset on each K8s node forwards the logs to splunk instance.
+This avoids the need for containers writing to file, shared volumes, sidecar containers per app container, file rotation strategies and log files causing space issues within a K8s cluster.
 
-Log message is in json format which are then built into the log show below with addition container/pod/node k8 info.
+Steps involved:
+
+- Output microservice app and request logs in json format to containers std.out and std.err
+
+- Fluentd Collector running as daemonset on each K8s node forwards the logs to splunk instance.
+
+- Log message is in json format which are then built into the log show below with addition container/pod/node k8 info.
 
 
 ## Steps (presuming minikube)
@@ -17,7 +23,7 @@ Log message is in json format which are then built into the log show below with 
 
 `kubectl -f k8s\sample-app\service.yaml create`
 
-### Create 3 pod microapp deployment  + service
+### Create 1 pod splunk-server deployment  + service
 `kubectl -f k8s\splunk-server\deployment.yaml create`
 
 `kubectl -f k8s\splunk-server\service.yaml create`
