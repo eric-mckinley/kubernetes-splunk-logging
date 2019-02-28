@@ -50,7 +50,7 @@ Using the copied token value run this command substituting in the token value an
   --from-literal=hec-index=main
  ```
  
- Create the splunk forwarder with `kubectl -f k8s/fluentd-forwarder/fluentd-splunk-0.1/kubernetes/fluentd-splunk.yaml create
+ Create the splunk forwarder with `kubectl -f k8s/fluentd-forwarder/fluentd-splunk-0.1/kubernetes/fluentd-splunk.yaml create`
  
  ### Generate some container logs
  Get the ip `minikube ip` and the app port `kubectl get services -n poc | grep microapp` to see what the exposed service port is mapped to **80** port.
