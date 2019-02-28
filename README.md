@@ -1,6 +1,6 @@
 # K8S LOGGING
 
-Brief: To use k8s logs of stdout and stderr that kubernetes stores in each nodes /var/log/* folder by forwarding them to splunk via a fluentd forwarder running on each node.
+Brief: To use container logs of stdout and stderr that kubernetes stores in each nodes /var/log/* folder by forwarding them to splunk via a fluentd forwarder running on each node.
 
 This avoids the need for containers writing to file, shared volumes, sidecar containers per app container, file rotation strategies and log files causing space issues within a K8s cluster.
 
